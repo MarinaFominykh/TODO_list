@@ -22,19 +22,18 @@ const taskSchema = new mongoose.Schema({
 
   updatedAt: {
     type: Date,
-    required: true,
     default: Date.now(),
   },
 
   priority: {
     type: String,
-    enum: ["высокий", "средний", "низкий"],
+    enum: ['высокий', 'средний', 'низкий'],
     required: true,
   },
 
   status: {
     type: String,
-    enum: ["к выполнению", "выполняется", "выполнена", "отменена"],
+    enum: ['к выполнению', 'выполняется', 'выполнена', 'отменена'],
     required: true,
   },
 
@@ -48,7 +47,7 @@ const taskSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     required: true,
-  }
+  },
 });
 
 module.exports = mongoose.model('task', taskSchema);

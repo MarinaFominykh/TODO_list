@@ -1,5 +1,6 @@
 const router = require('express').Router();
-// const userRouter = require('./users');
+const taskRouter = require('./tasks');
+const userRouter = require('./users');
 
 const {
   createUser,
@@ -14,7 +15,8 @@ const NotFoundError = require('../errors/not-found-error');
 router.post('/signup', validateCreateUser, createUser);
 router.post('/signin', validateLogin, loginUser);
 
-// router.use('/users', userRouter);
+router.use('/', taskRouter);
+router.use('/users', userRouter);
 
 // Обработка несуществующего маршрута
 router.use('*', (req, res, next) => {

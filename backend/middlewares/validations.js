@@ -22,7 +22,36 @@ const validateLogin = celebrate({
   }),
 });
 
+// POST /
+
+const validateCreateTask = celebrate({
+  body: Joi.object().keys({
+    title: Joi.string().required(),
+    description: Joi.string().required(),
+    finish: Joi.date().required(),
+    start: Joi.date().required(),
+    priority: Joi.string().required(),
+    status: Joi.string().required(),
+    executor: Joi.required(),
+  }).unknown(true),
+});
+
+// PATCH /
+
+const validateUpdateTask = celebrate({
+  body: Joi.object().keys({
+    title: Joi.string(),
+    description: Joi.string(),
+    finish: Joi.date(),
+    start: Joi.date(),
+    priority: Joi.string(),
+    status: Joi.string(),
+  }).unknown(true),
+});
+
 module.exports = {
   validateCreateUser,
   validateLogin,
+  validateCreateTask,
+  validateUpdateTask,
 };
