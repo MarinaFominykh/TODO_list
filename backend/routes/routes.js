@@ -3,16 +3,16 @@ const router = require('express').Router();
 
 const {
   createUser,
-  // login,
+  loginUser,
 } = require('../controllers/users');
 const {
   validateCreateUser,
-  // validateLogin,
+  validateLogin,
 } = require('../middlewares/validations');
 const NotFoundError = require('../errors/not-found-error');
 
 router.post('/signup', validateCreateUser, createUser);
-// router.post('/signin', validateLogin, login);
+router.post('/signin', validateLogin, loginUser);
 
 // router.use('/users', userRouter);
 
