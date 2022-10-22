@@ -1,0 +1,14 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.main__title {
+    margin: 0 0 50px 0;
+}
+
+.task {
+    max-width: 768px;
+    margin: auto;
+}

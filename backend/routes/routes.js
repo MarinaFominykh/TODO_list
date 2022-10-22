@@ -15,7 +15,7 @@ const NotFoundError = require('../errors/not-found-error');
 router.post('/signup', validateCreateUser, createUser);
 router.post('/signin', validateLogin, loginUser);
 
-router.use('/', taskRouter);
+router.use('/tasks', taskRouter);
 router.use('/users', userRouter);
 
 // Обработка несуществующего маршрута

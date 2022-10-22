@@ -2,10 +2,16 @@ const Task = require('../models/task');
 const BadRequestError = require('../errors/bad-request-error');
 const NotFoundError = require('../errors/not-found-error');
 
-// POST / - создание задачи
+// POST /tasks - создание задачи
 const createTask = (req, res, next) => {
   const {
-    title, description, finish, start, priority, status, executor,
+    title,
+    description,
+    finish,
+    start,
+    priority,
+    status,
+    executor,
   } = req.body;
 
   Task.create({
@@ -28,20 +34,36 @@ const createTask = (req, res, next) => {
     });
 };
 
-// GET / — получить все задачи
+// GET /tasks — получить все задачи
 const getTasks = (req, res, next) => {
   Task.find({})
+    .populate({
+      path: 'executor',
+      select: ['surname', 'patronymic', 'name'],
+    })
     .then((tasks) => res.send(tasks))
     .catch(next);
 };
 
-// PATCH /:id - обновление задачи
+// PATCH /tasks/:id - обновление задачи
 const updateTask = (req, res, next) => {
   const {
-    title, description, finish, start, priority, status, executor,
+    title,
+    description,
+    finish,
+    start,
+    priority,
+    status,
+    executor,
   } = req.body;
   Task.findByIdAndUpdate(req.params.id, {
-    title, description, finish, start, priority, status, executor,
+    title,
+    description,
+    finish,
+    start,
+    priority,
+    status,
+    executor,
   }, {
     new: true,
     runValidators: true,

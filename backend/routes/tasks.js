@@ -1,10 +1,13 @@
 const router = require('express').Router();
 const {
-  createTask, updateTask, getTasks,
+  createTask,
+  updateTask,
+  getTasks,
 } = require('../controllers/tasks');
 const auth = require('../middlewares/auth');
 const {
-  validateCreateTask, validateUpdateTask,
+  validateCreateTask,
+  validateUpdateTask,
 } = require('../middlewares/validations');
 
 router.use(auth);

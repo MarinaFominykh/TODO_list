@@ -4,8 +4,6 @@ const ERROR_CODE_FORBIDDEN = 403;
 const ERROR_CODE_NOT_FOUND = 404;
 const ERROR_CODE_CONFLICT = 409;
 const ERROR_CODE_INTERNAL_SERVER_ERROR = 500;
-const LINK_REGEX = /^https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-.~:/?#[\]@!$&'()*+,;=]{2,}#?$/;
-
 module.exports = {
   ERROR_CODE_BAD_REQUEST,
   ERROR_CODE_FORBIDDEN,
@@ -13,5 +11,5 @@ module.exports = {
   ERROR_CODE_INTERNAL_SERVER_ERROR,
   ERROR_CODE_UNAUTHORIZED,
   ERROR_CODE_CONFLICT,
-  LINK_REGEX,
+
 };

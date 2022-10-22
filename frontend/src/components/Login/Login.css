@@ -1,0 +1,15 @@
+.login{
+        max-width: 880px;
+        margin: auto;
+        margin-top: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 15px;
+}
+
+.login__form {
+    width: 358px;
+    margin: auto;
+    border: 0;
+}
