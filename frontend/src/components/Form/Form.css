@@ -5,9 +5,13 @@
     margin: 0 0 50px 0;
 }
 
+.form__label {
+    text-align: left;
+}
+
 .form__inputs {
     border: none;
-    margin-bottom: 20pxf;
+    margin-bottom: 20px;
 }
 
 .form__input {
@@ -17,7 +21,15 @@
     background: transparent;
     border: none;
     border-bottom: 2px solid #CCCCCC;
-    padding: 0 0 13px 0;
+    /* padding: 0 0 13px 0; */
+}
+
+.form__input:disabled {
+    background: #d9d7d7;
+}
+.form__unputs-text {
+    display: flex;
+    flex-direction: column;
 }
 
 .form__submit {
@@ -33,23 +45,49 @@
     color: #FFFFFF;
     cursor: pointer;
     transition: .5s;
-    margin-bottom: 16px;
+    margin: 20px 0 16px;
 }
 
-.form__submit_disable {
+.form__submit:disabled {
     width: 100%;
     padding: 0;
     text-align: center;
     border: none;
-    background: #F8F8F8;
+    background: #9b9a9a;
     border-radius: 3px;
     font-weight: 500;
     font-size: 14px;
     line-height: 45px;
     color: #C2C2C2;
     margin-bottom: 16px;
+    cursor: default;
 }
 
 .form__submit:hover {
     opacity: .6;
+}
+
+.form__submit:hover:disabled {
+    opacity: 1;
+}
+
+.form__close {
+    width: 32px;
+    height: 32px;
+    background: transparent url(../../images/Close_Icon.svg);
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: .5s;
+    object-fit: contain;
+    object-position: center;
+    border: 1px red;
+}
+
+
+.form__close:hover {
+    opacity: 0.6;
 }

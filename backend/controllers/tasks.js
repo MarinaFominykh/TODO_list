@@ -8,23 +8,22 @@ const createTask = (req, res, next) => {
     title,
     description,
     finish,
-    start,
     priority,
     status,
     executor,
   } = req.body;
-
   Task.create({
     title,
     description,
     finish,
-    start,
     priority,
     status,
     executor,
     author: req.user._id,
   })
-    .then((task) => res.send(task))
+    .then((task) => {
+      res.send(task);
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
@@ -40,6 +39,10 @@ const getTasks = (req, res, next) => {
     .populate({
       path: 'executor',
       select: ['surname', 'patronymic', 'name'],
+    })
+    .populate({
+      path: 'author',
+      select: 'director',
     })
     .then((tasks) => res.send(tasks))
     .catch(next);

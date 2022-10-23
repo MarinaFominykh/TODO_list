@@ -1,11 +1,12 @@
 import "./Form.css";
+import InfoTooltip from "../InfoTooltip/InfoTooltip.jsx";
 
-function Form({ onSubmit, title, children, isDisabled, button, classForm }) {
+function Form({ onSubmit, title, children, isDisabled, button, classForm, message }) {
   return (
-    <form className={`form ${classForm}`} onSubmit={onSubmit} noValidate>
+    <form className={`form ${classForm}`} onSubmit={onSubmit } noValidate>
       <h2 className="form__title">{title}</h2>
       <fieldset className="form__inputs">{children}</fieldset>
-      {/* <InfoTooltip message={message} /> */}
+      <InfoTooltip message={message} />
       <button
         type="submit"
         className="form__submit"
@@ -14,6 +15,7 @@ function Form({ onSubmit, title, children, isDisabled, button, classForm }) {
       >
         {button}
       </button>
+     
     </form>
   );
 }

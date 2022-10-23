@@ -2,8 +2,8 @@ import "./Login.css";
 import { useEffect } from "react";
 import Form from "../Form/Form.jsx";
 import { useFormWithValidation } from "../../hooks/useFormValidation.js";
-
-function Login({onLogin}) {
+import InfoTooltip from "../InfoTooltip/InfoTooltip.jsx";
+function Login({ onLogin, message }) {
   const { values, handleChange, resetForm, errors, isValid } =
     useFormWithValidation();
   useEffect(() => {
@@ -12,10 +12,6 @@ function Login({onLogin}) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(values);
-    if (!values) {
-      return;
-    }
     onLogin(values);
   }
   return (
@@ -25,6 +21,8 @@ function Login({onLogin}) {
         button="Войти"
         title="Авторизация"
         classForm="login__form"
+        isDisabled={!isValid}
+        message={message}
       >
         <input
           name="login"
@@ -34,14 +32,17 @@ function Login({onLogin}) {
           onChange={handleChange}
           required
         />
+        <InfoTooltip message={errors.login || ""}></InfoTooltip>
         <input
           name="password"
+          type="password"
           className="form__input"
           placeholder="Пароль"
           value={values.password || ""}
           onChange={handleChange}
           required
         />
+        <InfoTooltip message={errors.password || ""}></InfoTooltip>
       </Form>
     </section>
   );

@@ -1,7 +1,7 @@
 import "./Main.css";
 import Task from "../Task/Task.jsx";
 
-function Main({ tasks }) {
+function Main({ tasks, onClickAddTask, onClickEditTask }) {
   return (
     <main className="main">
       <h1 className="main__title">ToDo</h1>
@@ -25,11 +25,14 @@ function Main({ tasks }) {
                 finish={task.finish}
                 executor={`${task.executor.name} ${task.executor.patronymic} ${task.executor.surname}`}
                 status={task.status}
+                onClick={onClickEditTask}
+                task={task}
               />
             );
           })}
         </tbody>
       </table>
+      <button className="main__add-task" onClick={onClickAddTask}>Добавить задачу</button>
     </main>
   );
 }

@@ -1,0 +1,24 @@
+.header {
+    max-width: 1024px;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    margin: auto;
+
+}
+
+.header__signout {
+    border: none;
+    font-size: 18px;
+    line-height: 20px;
+    text-align: center;
+    background: transparent;
+    cursor: pointer;
+    transition: .5s;
+    padding: 0;
+}
+
+.header__signout:hover {
+    opacity: .6;
+    text-decoration: underline;
+}

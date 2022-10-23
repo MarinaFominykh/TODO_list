@@ -22,21 +22,20 @@ const validateLogin = celebrate({
   }),
 });
 
-// POST /
+// POST /tasks
 
 const validateCreateTask = celebrate({
   body: Joi.object().keys({
     title: Joi.string().required(),
     description: Joi.string().required(),
     finish: Joi.date().required(),
-    start: Joi.date().required(),
     priority: Joi.string().required(),
     status: Joi.string().required(),
     executor: Joi.required(),
   }).unknown(true),
 });
 
-// PATCH /
+// PATCH /tasks
 
 const validateUpdateTask = celebrate({
   body: Joi.object().keys({

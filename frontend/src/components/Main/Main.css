@@ -2,6 +2,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    max-width: 1024px;
+    margin: auto;
 }
 
 .main__title {
@@ -10,5 +12,29 @@
 
 .task {
     max-width: 768px;
-    margin: auto;
+    margin: 0 auto 50px;
 }
+
+.main__add-task {
+    width: 200px;
+    padding: 0;
+    text-align: center;
+    border: none;
+    background: #3456F3;
+    border-radius: 3px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 45px;
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: .5s;
+    margin: 0 auto 16px;
+}
+
+.main__add-task:hover {
+    opacity: .6;
+}
+
+/* * {
+    border: 1px red solid;
+} */
