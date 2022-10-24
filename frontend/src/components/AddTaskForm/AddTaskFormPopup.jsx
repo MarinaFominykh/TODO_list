@@ -5,7 +5,7 @@ import Popup from "../Popup/Popup.jsx";
 import InfoTooltip from "../InfoTooltip/InfoTooltip.jsx";
 import { useFormWithValidation } from "../../hooks/useFormValidation.js";
 
-function AddTaskFormPopup({ isOpen, onAddTask, users, onClick }) {
+function AddTaskFormPopup({ isOpen, onAddTask, users, onClick, message }) {
   const { values, handleChange, errors, isValid, resetForm } =
     useFormWithValidation();
   useEffect(() => {
@@ -23,7 +23,7 @@ function AddTaskFormPopup({ isOpen, onAddTask, users, onClick }) {
         title="Добавить задачу"
         classForm="add-task__form"
         isDisabled={!isValid}
-      // message={message}
+      message={message}
       >
         <div className="form__unputs-text">
           <label className="form__label" htmlFor="title">

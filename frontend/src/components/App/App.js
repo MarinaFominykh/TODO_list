@@ -1,6 +1,13 @@
 import "./App.css";
-import { useState, useEffect } from "react";
-import { Route, Switch, useHistory, useLocation } from "react-router-dom";
+import { useState, useEffect, createContext } from "react";
+import {
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
+  Redirect,
+} from "react-router-dom";
+
 import Login from "../Login/Login.jsx";
 import Main from "../Main/Main.jsx";
 import Header from "../Header/Header.jsx";
@@ -13,14 +20,17 @@ import {
   getTasks,
   getUsers,
   addTask,
-  updateTask
+  updateTask,
 } from "../../utils/api.js";
+
+import {CurrentUserContext} from "../../contexts/CurrentUserContext.jsx"
 import {
   CONFLICT_LOGIN_MESSAGE,
   AUTH_DATA_ERROR_MESSAGE,
   SERVER_ERROR_MESSAGE,
   INVALID_TOKEN_ERROR_MESSAGE,
   INVALID_DATA_ERROR_MESSAGE,
+  MISS_SUBORDINATE_MESSAGE,
 } from "../../utils/errorMessages.js";
 
 function App() {
@@ -28,6 +38,7 @@ function App() {
   let location = useLocation();
   const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [message, setMessage] = useState("");
@@ -36,6 +47,13 @@ function App() {
   const [editTaskState, setEditTaskState] = useState({});
   const [isDisabled, setIsDisabled] = useState(false);
   const [checkRight, setCheckRight] = useState(false);
+
+  // Текущая дата
+  let today = new Date();
+  let dd = String(today.getDate()).padStart(2, "0");
+  let mm = String(today.getMonth() + 1).padStart(2, "0");
+  let yyyy = today.getFullYear();
+  today = mm + "." + dd + "." + yyyy;
 
   // демонстрация ошибки и таймер
   const showInfoToolTip = (error) => {
@@ -91,21 +109,27 @@ function App() {
     setLoggedIn(false);
     setCurrentUser(null);
     setTasks([]);
+    setUsers([]);
+    setMessage("");
     history.push("/sign-in");
   };
 
   // Обработчики кликов
 
   function handleAddTaskClick() {
+    if (filteredUsers.length <= 1) {
+      setIsFormAddTaskOpen(true);
+      showInfoToolTip(MISS_SUBORDINATE_MESSAGE);
+    }
     setIsFormAddTaskOpen(true);
   }
 
   function handleEditTaskClick(data) {
-    if(currentUser.director === data.author._id) {
+    if (currentUser.director === data.author._id) {
       setIsDisabled(true);
       setCheckRight(true);
     }
-    
+
     setEditTaskState(data);
     setIsFormEditTaskOpen(true);
   }
@@ -115,6 +139,7 @@ function App() {
     setIsFormEditTaskOpen(false);
     setIsDisabled(false);
     setCheckRight(false);
+    setMessage("");
   }
   function addNewTask(data) {
     addTask(data)
@@ -123,6 +148,7 @@ function App() {
         // Необходим рефакторинг, чтобы избавиться от избыточных запросов к серверу
         getTasks().then((tasks) => {
           setTasks(tasks);
+          console.log(tasks)
         });
         setIsFormAddTaskOpen(false);
       })
@@ -130,18 +156,17 @@ function App() {
   }
 
   function editTask(data) {
-   if(currentUser.director === editTaskState.author._id) {
-    const updateData = {
-      title: data.title,
-            description: editTaskState.description,
-            finish: editTaskState.finish,
-            priority: editTaskState.priority,
-            status: data.status,
-            executor: editTaskState.executor,
+    if (currentUser.director === editTaskState.author._id) {
+      const updateData = {
+        title: data.title,
+        description: editTaskState.description,
+        finish: editTaskState.finish,
+        priority: editTaskState.priority,
+        status: data.status,
+        executor: editTaskState.executor,
+      };
+      updateTask(editTaskState, updateData);
     }
-    updateTask(editTaskState, updateData)
-  //  return showInfoToolTip("Эта задача создана вашим директором. Вы не можете менять ее атрибуты, кроме статуса")
-   }
     updateTask(editTaskState, data)
       .then(() => {
         // setTasks([...tasks, newTask]);
@@ -154,7 +179,7 @@ function App() {
       .catch(console.log);
   }
 
-  //Запросы к серверу за задачами и юзерами отправляются, только если пользователь залогинен
+  //Получаем задачи с сервера, только если пользователь залогинен
   useEffect(() => {
     if (loggedIn) {
       getTasks()
@@ -165,28 +190,51 @@ function App() {
     }
   }, [loggedIn]);
 
+  // Функция запроса к серверу за пользователями
+  function fetchUsers() {
+    getUsers()
+      .then((users) => {
+        setUsers(users);
+      })
+      .catch(console.log());
+  }
+
+  //Фильтрация пользователей по наличию подчиненных
+  function filter() {
+    setFilteredUsers(
+      users.filter((el) => {
+        return (
+          el?.director?._id === currentUser._id || el._id === currentUser._id
+        );
+      })
+    );
+  }
+
+  // Вызываем функцию фильтрации после изменения стейта всех пользователей
   useEffect(() => {
-    if (loggedIn) {
-      getUsers()
-        .then((users) => {
-          setUsers(users);
-          
-        })
-        .catch(console.log());
+    filter();
+  }, [users]);
+
+  // Получаем пользователей с сервера, только если пользователь залогинен
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetchUsers();
     }
   }, [loggedIn]);
 
+  // Получаем данные текущего пользователя, записываем в контекст
   useEffect(() => {
     if (loggedIn) {
       getProfile()
         .then((user) => {
           setCurrentUser(user);
-          
         })
         .catch(console.log());
     }
   }, [loggedIn]);
 
+  // Проверка токена после того, как пользователь залогинился
   useEffect(() => {
     checkToken();
   }, [loggedIn]);
@@ -204,34 +252,45 @@ function App() {
   return (
     <div className="App">
       <Header signOut={handleSignOut} />
-      <Switch>
-        <ProtectedRoute exact path="/" loggedIn={loggedIn}>
-          <Main
-            tasks={tasks}
-            onClickAddTask={handleAddTaskClick}
-            onClickEditTask={handleEditTaskClick}
-          ></Main>
-        </ProtectedRoute>
+      <CurrentUserContext.Provider value={currentUser}>
+        <Switch>
+          <ProtectedRoute exact path="/" loggedIn={loggedIn}>
+            <Main
+              tasks={tasks}
+              onClickAddTask={handleAddTaskClick}
+              onClickEditTask={handleEditTaskClick}
+              users={filteredUsers}
+              allusers={users}
+              isLoggedIn={loggedIn}
+            ></Main>
+          </ProtectedRoute>
 
-        <Route path="/sign-in">
-          <Login onLogin={handleLogin} message={message} />
-        </Route>
-      </Switch>
-      <AddTaskFormPopup
-        isOpen={isFormAddTaskOpen}
-        onAddTask={addNewTask}
-        users={users}
-        onClick={handleClosePopupClick}
-      />
-      <EditTaskFormPopup
-        isOpen={isFormEditTaskOpen}
-        onEditTask={editTask}
-        onClick={handleClosePopupClick}
-        users={users}
-        message={message}
-        isDisabled={isDisabled}
-        checkRight={checkRight}
-      />
+          <Route path="/sign-in">
+            <Login onLogin={handleLogin} message={message} />
+          </Route>
+          <Route>
+            {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
+          </Route>
+        </Switch>
+        <AddTaskFormPopup
+          isOpen={isFormAddTaskOpen}
+          onAddTask={addNewTask}
+          // users={users}
+          users={filteredUsers}
+          onClick={handleClosePopupClick}
+          message={message}
+        />
+        <EditTaskFormPopup
+          isOpen={isFormEditTaskOpen}
+          onEditTask={editTask}
+          onClick={handleClosePopupClick}
+          // users={users}
+          users={filteredUsers}
+          message={message}
+          isDisabled={isDisabled}
+          checkRight={checkRight}
+        />
+      </CurrentUserContext.Provider>
     </div>
   );
 }

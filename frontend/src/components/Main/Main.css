@@ -10,31 +10,66 @@
     margin: 0 0 50px 0;
 }
 
-.task {
-    max-width: 768px;
-    margin: 0 auto 50px;
-}
-
 .main__add-task {
     width: 200px;
     padding: 0;
     text-align: center;
     border: none;
-    background: #3456F3;
+    background: #3456f3;
     border-radius: 3px;
     font-weight: 500;
     font-size: 14px;
     line-height: 45px;
-    color: #FFFFFF;
+    color: #ffffff;
     cursor: pointer;
-    transition: .5s;
+    transition: 0.5s;
     margin: 0 auto 16px;
 }
 
 .main__add-task:hover {
-    opacity: .6;
+    opacity: 0.6;
+}
+
+.main__filter-label {
+    margin: 0;
+    text-align: left;
+}
+
+.main__filter-input {
+    width: 200px;
+}
+
+.main-filter-container {
+    display: flex;
+    /* flex-direction: column; */
+    /* justify-content: start; */
+    justify-content: space-between;
+    gap: 7px;
+    margin-bottom: 50px;
 }
 
 /* * {
     border: 1px red solid;
 } */
+
+.task {
+    max-width: 900px;
+    margin: 0 auto 50px;
+    /* border-collapse: separate; */
+    /* border-spacing: 20px 10px; */
+    border-collapse: collapse;
+}
+
+.task__cell {
+    text-align: left;
+    border-bottom: 2px solid #CCCCCC;
+    height: 25px;
+}
+
+/* .task__cell-head {
+    text-align: center; 
+} */
+
+.task__cell:nth-last-of-type(2) {
+    min-width: 250px;
+}

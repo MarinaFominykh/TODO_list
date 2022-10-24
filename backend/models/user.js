@@ -32,7 +32,6 @@ const userSchema = new mongoose.Schema({
   director: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    // required: true,
   },
 });
 

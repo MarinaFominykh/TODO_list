@@ -67,6 +67,7 @@ const updateTask = (req, res, next) => {
     priority,
     status,
     executor,
+    updatedAt: Date.now(),
   }, {
     new: true,
     runValidators: true,

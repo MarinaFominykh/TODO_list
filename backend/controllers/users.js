@@ -82,6 +82,9 @@ const getCurrentUser = (req, res, next) => {
 // GET /users — все пользователи
 const getUsers = (req, res, next) => {
   User.find({})
+    .populate({
+      path: 'director',
+    })
     .then((users) => res.send(users))
     .catch(next);
 };

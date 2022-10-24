@@ -81,7 +81,7 @@ function EditTaskFormPopup({ isOpen, onEditTask, users, onClick, message, isDisa
             name="executor"
             id="executor"
             className="form__input"
-            value={values.executor}
+            value={values.executor || ""}
             onChange={handleChange}
             disabled={isDisabled}
             required ={!checkRight}
