@@ -75,10 +75,12 @@
 }
 
 .task__cell-title {
+    text-align: left;
+    border-bottom: 2px solid #CCCCCC;
+    height: 25px;
     cursor: pointer;
     transition: .5s;
-    border-bottom: 2px solid #CCCCCC;
-
+   
 }
 
 .task__cell-title:hover {
