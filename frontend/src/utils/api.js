@@ -6,6 +6,7 @@ const checkResponse = (res) => {
     return Promise.reject(res.status);
 };
 
+// Авторизация
 export const authorize = (login, password) => {
     return fetch(`${BASE_URL}/signin`, {
         method: "POST",
@@ -20,6 +21,7 @@ export const authorize = (login, password) => {
     }).then(checkResponse);
 };
 
+// Получаем данные текущего пользователя
 export const getProfile = () => {
     return fetch(`${BASE_URL}/users/me`, {
         headers: {
@@ -29,6 +31,7 @@ export const getProfile = () => {
     }).then(checkResponse);
 };
 
+// Получаем все задачи
 export const getTasks = () => {
     return fetch(`${BASE_URL}/tasks`, {
         headers: {
@@ -38,6 +41,7 @@ export const getTasks = () => {
     }).then(checkResponse);
 };
 
+// Получаем всех пользователей
 export const getUsers = () => {
     return fetch(`${BASE_URL}/users`, {
         headers: {
@@ -47,6 +51,7 @@ export const getUsers = () => {
     }).then(checkResponse);
 };
 
+// Добавить новую задачу
 export const addTask = (data) => {
     return fetch(`${BASE_URL}/tasks`, {
         method: "POST",
@@ -65,6 +70,7 @@ export const addTask = (data) => {
     }).then(checkResponse);
 };
 
+// Редактировать задачу
 export const updateTask = (task, data) => {
     return fetch(`${BASE_URL}/tasks/${task._id}`, {
         method: "PATCH",

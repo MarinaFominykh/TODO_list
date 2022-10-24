@@ -23,7 +23,7 @@ import {
   updateTask,
 } from "../../utils/api.js";
 
-import {CurrentUserContext} from "../../contexts/CurrentUserContext.jsx"
+import { CurrentUserContext } from "../../contexts/CurrentUserContext.jsx";
 import {
   CONFLICT_LOGIN_MESSAGE,
   AUTH_DATA_ERROR_MESSAGE,
@@ -47,13 +47,6 @@ function App() {
   const [editTaskState, setEditTaskState] = useState({});
   const [isDisabled, setIsDisabled] = useState(false);
   const [checkRight, setCheckRight] = useState(false);
-
-  // Текущая дата
-  let today = new Date();
-  let dd = String(today.getDate()).padStart(2, "0");
-  let mm = String(today.getMonth() + 1).padStart(2, "0");
-  let yyyy = today.getFullYear();
-  today = mm + "." + dd + "." + yyyy;
 
   // демонстрация ошибки и таймер
   const showInfoToolTip = (error) => {
@@ -116,6 +109,7 @@ function App() {
 
   // Обработчики кликов
 
+  // клик на кнопку открытия формы добавления задачи
   function handleAddTaskClick() {
     if (filteredUsers.length <= 1) {
       setIsFormAddTaskOpen(true);
@@ -123,7 +117,7 @@ function App() {
     }
     setIsFormAddTaskOpen(true);
   }
-
+  // клик на кнопку открытия формы редактирования задачи
   function handleEditTaskClick(data) {
     if (currentUser.director === data.author._id) {
       setIsDisabled(true);
@@ -133,7 +127,7 @@ function App() {
     setEditTaskState(data);
     setIsFormEditTaskOpen(true);
   }
-
+  // клик на кнопку закрытия попапов
   function handleClosePopupClick() {
     setIsFormAddTaskOpen(false);
     setIsFormEditTaskOpen(false);
@@ -141,6 +135,8 @@ function App() {
     setCheckRight(false);
     setMessage("");
   }
+
+  // Добавление новой задачи
   function addNewTask(data) {
     addTask(data)
       .then((newTask) => {
@@ -148,13 +144,13 @@ function App() {
         // Необходим рефакторинг, чтобы избавиться от избыточных запросов к серверу
         getTasks().then((tasks) => {
           setTasks(tasks);
-          console.log(tasks)
+          console.log(tasks);
         });
         setIsFormAddTaskOpen(false);
       })
       .catch(console.log);
   }
-
+  // Редактирование задачи
   function editTask(data) {
     if (currentUser.director === editTaskState.author._id) {
       const updateData = {
@@ -249,12 +245,13 @@ function App() {
     document.addEventListener("keydown", closeByEscape);
     return () => document.removeEventListener("keydown", closeByEscape);
   }, []);
+
   return (
     <div className="App">
-      <Header signOut={handleSignOut} />
       <CurrentUserContext.Provider value={currentUser}>
         <Switch>
           <ProtectedRoute exact path="/" loggedIn={loggedIn}>
+            <Header signOut={handleSignOut} />
             <Main
               tasks={tasks}
               onClickAddTask={handleAddTaskClick}
@@ -275,7 +272,6 @@ function App() {
         <AddTaskFormPopup
           isOpen={isFormAddTaskOpen}
           onAddTask={addNewTask}
-          // users={users}
           users={filteredUsers}
           onClick={handleClosePopupClick}
           message={message}
@@ -284,7 +280,6 @@ function App() {
           isOpen={isFormEditTaskOpen}
           onEditTask={editTask}
           onClick={handleClosePopupClick}
-          // users={users}
           users={filteredUsers}
           message={message}
           isDisabled={isDisabled}

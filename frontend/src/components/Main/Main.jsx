@@ -18,6 +18,19 @@ function Main({ tasks, onClickAddTask, onClickEditTask, users, allusers }) {
     setIsExecutorChecked(e.target.value);
   }
 
+  // Класс для заголовка задачи
+  function getClassTitle(finish, status) {
+    if (
+      moment(finish).format("DD.MM.YYYY").toString() ===
+      moment().format("DD.MM.YYYY").toString()
+    ) {
+      return "task__cell-title task__cell-red";
+    } else if (status === "выполнена") {
+      return "task__cell-title task__cell-green";
+    }
+    return "task__cell-title";
+  }
+
   // Фильтрация задач по исполнителю
   function filterExecutorTasks() {
     return setfilteredTasks(
@@ -81,28 +94,30 @@ function Main({ tasks, onClickAddTask, onClickEditTask, users, allusers }) {
     checkSubordinate();
   }, [users]);
 
-  console.log(isDirector);
   return (
     <main className="main">
       <h1 className="main__title">ToDo</h1>
-      <div className="main-filter-container">
-        <label className="main__filter-label" htmlFor="period">
-          Выбрать по дате завершения
-        </label>
-        <select
-          name="period"
-          id="period"
-          className="main__filter-input form__input"
-          value={isPeriodChecked}
-          onChange={handlePeriodInputChange}
-        >
-          <option value=""></option>
-          <option value="на сегодня">на сегодня</option>
-          <option value="на неделю">на неделю</option>
-          <option value="на будущее">на будущее</option>
-        </select>
+      <div className="main__filter-container">
+        <div className="main__filter-period">
+          <label className="main__filter-label" htmlFor="period">
+            Выбрать по дате завершения
+          </label>
+          <select
+            name="period"
+            id="period"
+            className="main__filter-input form__input"
+            value={isPeriodChecked}
+            onChange={handlePeriodInputChange}
+          >
+            <option value=""></option>
+            <option value="на сегодня">на сегодня</option>
+            <option value="на неделю">на неделю</option>
+            <option value="на будущее">на будущее</option>
+          </select>
+        </div>
+
         {isDirector && (
-          <>
+          <div className="main__filter-executor">
             <label className="main__filter-label" htmlFor="executor">
               Выбрать по исполнителю
             </label>
@@ -122,7 +137,7 @@ function Main({ tasks, onClickAddTask, onClickEditTask, users, allusers }) {
                 );
               })}
             </select>
-          </>
+          </div>
         )}
       </div>
 
@@ -149,6 +164,7 @@ function Main({ tasks, onClickAddTask, onClickEditTask, users, allusers }) {
                   status={task.status}
                   onClick={onClickEditTask}
                   task={task}
+                  classTitle={getClassTitle(task.finish, task.status)}
                 />
               );
             })
