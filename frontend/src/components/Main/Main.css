@@ -77,6 +77,7 @@
 .task__cell-title {
     cursor: pointer;
     transition: .5s;
+    border-bottom: 2px solid #CCCCCC;
 
 }
 

@@ -22,3 +22,20 @@
      
   }
 
+{
+    "name": "Лев",
+    "patronymic": "Николаевич",
+    "surname": "Толстой",
+    "login": "tolst",
+    "password": "123456"
+   
+  }
+
+  {
+    "name": "Владимир",
+    "patronymic": "Ильич",
+    "surname": "Ленин",
+    "login": "len",
+    "password": "123456"
+   
+  }

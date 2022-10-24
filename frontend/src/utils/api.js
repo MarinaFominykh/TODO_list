@@ -22,7 +22,7 @@ export const authorize = (login, password) => {
     }).then(checkResponse);
 };
 
-// Получаем данные текущего пользователя
+// Получаем данные текущего пользyователя
 export const getProfile = () => {
     return fetch(`${BASE_URL}/users/me`, {
         headers: {
