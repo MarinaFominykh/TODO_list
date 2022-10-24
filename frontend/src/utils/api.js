@@ -1,4 +1,5 @@
-export const BASE_URL = "http://localhost:3000";
+// export const BASE_URL = "http://localhost:3000";
+export const BASE_URL = "http://api.pilona.nomoreparties.sbs";
 const checkResponse = (res) => {
     if (res.ok) {
         return res.json();
