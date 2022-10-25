@@ -101,7 +101,7 @@ function App() {
         .catch((err) => console.log(err));
     }
   }, [loggedIn]);
-console.log(users, tasks)
+
   // Выйти из аккаунта
   const handleSignOut = () => {
     localStorage.removeItem("token");
