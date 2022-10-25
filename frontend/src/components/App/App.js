@@ -18,14 +18,13 @@ import {
   authorize,
   getProfile,
   getTasks,
-  getUsers,
   addTask,
+  renderTasksAndUsers,
   updateTask,
 } from "../../utils/api.js";
 
 import { CurrentUserContext } from "../../contexts/CurrentUserContext.jsx";
 import {
-  CONFLICT_LOGIN_MESSAGE,
   AUTH_DATA_ERROR_MESSAGE,
   SERVER_ERROR_MESSAGE,
   INVALID_TOKEN_ERROR_MESSAGE,
@@ -35,7 +34,6 @@ import {
 
 function App() {
   const history = useHistory();
-  let location = useLocation();
   const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -76,36 +74,56 @@ function App() {
       });
   }
 
-  // проверка токена
-  function checkToken() {
+  // проверка токена и получение данных текущего пользователя
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       getProfile(token)
-        .then((res) => {
-          if (res) {
+        .then((data) => {
+          if (data) {
+            setCurrentUser(data);
             setLoggedIn(true);
-            setCurrentUser(res);
-            history.push(location);
+            history.push("/");
           }
         })
-        .catch((err) => {
-          console.log(err);
-          localStorage.removeItem("token");
-          history.push("/");
-        });
+        .catch((err) => console.log(err));
     }
-  }
+  }, [history, loggedIn]);
 
+  // Получаем задачи и пользователей, записываем в стейт
+  useEffect(() => {
+    if (loggedIn) {
+      renderTasksAndUsers()
+        .then(([dataTasks, dataUsers]) => {
+          setUsers(dataUsers);
+          setTasks(dataTasks);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [loggedIn]);
+console.log(users, tasks)
   // Выйти из аккаунта
   const handleSignOut = () => {
     localStorage.removeItem("token");
     setLoggedIn(false);
-    setCurrentUser(null);
-    setTasks([]);
-    setUsers([]);
-    setMessage("");
     history.push("/sign-in");
   };
+
+  //Фильтрация пользователей по наличию подчиненных
+  function filter() {
+    setFilteredUsers(
+      users.filter((el) => {
+        return (
+          el?.director?._id === currentUser._id || el?._id === currentUser._id
+        );
+      })
+    );
+  }
+
+  // Вызываем функцию фильтрации после изменения стейта всех пользователей
+  useEffect(() => {
+    filter();
+  }, [users]);
 
   // Обработчики кликов
 
@@ -174,66 +192,6 @@ function App() {
       })
       .catch(console.log);
   }
-
-  //Получаем задачи с сервера, только если пользователь залогинен
-  useEffect(() => {
-    if (loggedIn) {
-      getTasks()
-        .then((tasks) => {
-          setTasks(tasks);
-        })
-        .catch(console.log());
-    }
-  }, [loggedIn]);
-
-  // Функция запроса к серверу за пользователями
-  function fetchUsers() {
-    getUsers()
-      .then((users) => {
-        setUsers(users);
-      })
-      .catch(console.log());
-  }
-
-  //Фильтрация пользователей по наличию подчиненных
-  function filter() {
-    setFilteredUsers(
-      users.filter((el) => {
-        return (
-          el?.director?._id === currentUser._id || el._id === currentUser._id
-        );
-      })
-    );
-  }
-
-  // Вызываем функцию фильтрации после изменения стейта всех пользователей
-  useEffect(() => {
-    filter();
-  }, [users]);
-
-  // Получаем пользователей с сервера, только если пользователь залогинен
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      fetchUsers();
-    }
-  }, [loggedIn]);
-
-  // Получаем данные текущего пользователя, записываем в контекст
-  useEffect(() => {
-    if (loggedIn) {
-      getProfile()
-        .then((user) => {
-          setCurrentUser(user);
-        })
-        .catch(console.log());
-    }
-  }, [loggedIn]);
-
-  // Проверка токена после того, как пользователь залогинился
-  useEffect(() => {
-    checkToken();
-  }, [loggedIn]);
 
   //Закрытие попапа клавишей ESC и снятие слушателя
   useEffect(() => {

@@ -52,6 +52,11 @@ export const getUsers = () => {
     }).then(checkResponse);
 };
 
+// Вернем массив промисов, если оба зарезолвлены
+export const renderTasksAndUsers =() => { 
+    return Promise.all([getTasks(), getUsers()])
+  }
+
 // Добавить новую задачу
 export const addTask = (data) => {
     return fetch(`${BASE_URL}/tasks`, {
